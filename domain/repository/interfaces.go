@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -30,5 +31,6 @@ type sqlTemplateInterface interface {
 type noSqlTemplateInterface interface {
 	Save(Document) (Document, error)
 	FindById(Document, primitive.ObjectID) error
+	Find(Document, bson.D) []Document
 	DeleteById(primitive.ObjectID, string)
 }

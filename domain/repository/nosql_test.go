@@ -5,6 +5,7 @@ import (
 
 	"github.com/ribeirosaimon/skadi/domain/config"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -41,6 +42,7 @@ func TestMongoDatabase_Save(t *testing.T) {
 		var newDataStruct simpleDataStruct
 		err := repositoryTest.NoSqlTemplate().FindById(&newDataStruct, savedValue.GetId())
 
+		// Verification
 		assert.Nil(t, err)
 		assert.NotEmpty(t, savedValue.GetId())
 		assert.Equal(t, savedValue.GetId(), newDataStruct.GetId())
@@ -50,8 +52,29 @@ func TestMongoDatabase_Save(t *testing.T) {
 		var newDataStruct simpleDataStruct
 		err := repositoryTest.NoSqlTemplate().FindById(&newDataStruct, primitive.NewObjectID())
 
+		// Verification
 		assert.NotNil(t, err)
 		assert.Equal(t, "mongo: no documents in result", err.Error())
+	})
+
+	t.Run("Find All", func(t *testing.T) {
+		// Given
+		newName := primitive.NewObjectID()
+
+		dataStruct := newSimpleDataStruct()
+		dataStruct2 := newSimpleDataStruct()
+
+		dataStruct.Name = newName.Hex()
+		dataStruct2.Name = newName.Hex()
+
+		repositoryTest.NoSqlTemplate().Save(&dataStruct)
+		repositoryTest.NoSqlTemplate().Save(&dataStruct2)
+
+		// When
+		find := repositoryTest.NoSqlTemplate().Find(&simpleDataStruct{}, bson.D{{"name", newName.Hex()}})
+
+		// Verification
+		assert.Equal(t, len(find), 2)
 	})
 
 	t.Run("Delete one value", func(t *testing.T) {

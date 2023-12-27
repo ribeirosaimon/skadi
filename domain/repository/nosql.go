@@ -37,6 +37,29 @@ func (m mongoDatabase) FindById(document Document, id primitive.ObjectID) error 
 	return nil
 }
 
+func (m mongoDatabase) Find(document Document, filter bson.D) []Document {
+	collection := getCollectionName(document)
+
+	slice := reflect.SliceOf(reflect.TypeOf(document))
+	sliceDocument := reflect.New(slice)
+
+	cur, err := m.conn.Collection(collection).Find(nil, filter)
+	if err != nil {
+		panic(err)
+	}
+	err = cur.All(nil, sliceDocument.Interface())
+	if err != nil {
+		panic(err)
+	}
+
+	result := make([]Document, sliceDocument.Elem().Len())
+	for i := 0; i < sliceDocument.Elem().Len(); i++ {
+		result[i] = sliceDocument.Elem().Index(i).Interface().(Document)
+	}
+
+	return result
+}
+
 func (m mongoDatabase) DeleteById(id primitive.ObjectID, collection string) {
 	filter := bson.D{{"_id", id}}
 	m.conn.Collection(collection).DeleteOne(nil, filter)
