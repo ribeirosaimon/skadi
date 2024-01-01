@@ -2,8 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"time"
+
+	"github.com/ribeirosaimon/skadi/domain/config"
+	"github.com/ribeirosaimon/skadi/domain/repository"
+	"github.com/ribeirosaimon/skadi/domain/sqldomain"
 )
 
 type User struct {
@@ -52,22 +57,25 @@ func main() {
 	typoDoH := reflect.TypeOf(h)
 	fmt.Printf("VALOR E TIPO DO U %s ----- %s \n", valorDoH, typoDoH)
 
-	// calcularTempo(func() {
-	// 	properties := config.GetProperties(os.Args[1])
-	// 	skadiRepository := repository.NewSkadiRepository(properties)
-	//
-	// 	// user := &nosqldomain.User{Name: "teste No Sql"}
-	// 	// stock := sqldomain.Stock{Name: "teste stock"}
-	//
-	// 	v, _ := primitive.ObjectIDFromHex("658767730249eedab563db5d")
-	// 	// _, err := skadiRepository.NoSqlTemplate().Save(user)
-	// 	teste := &nosqldomain.User{}
-	// 	if err := skadiRepository.NoSqlTemplate().FindById(teste, v); err != nil {
-	// 		panic(err)
-	// 	}
-	//
-	// 	// skadiRepository.FindById("10")
-	// })
+	calcularTempo(func() {
+		properties := config.GetProperties(os.Args[1])
+		skadiRepository := repository.NewSkadiRepository(properties)
+		stock := sqldomain.Stock{Name: "teste"}
+		skadiRepository.SqlTemplate().Save(stock)
+		// skadiRepository := repository.NewSkadiRepository(properties)
+
+		// user := &nosqldomain.User{Name: "teste No Sql"}
+		// stock := sqldomain.Stock{Name: "teste stock"}
+
+		// v, _ := primitive.ObjectIDFromHex("658767730249eedab563db5d")
+		// _, err := skadiRepository.NoSqlTemplate().Save(user)
+		// teste := &nosqldomain.User{}
+		// if err := skadiRepository.NoSqlTemplate().FindById(teste, v); err != nil {
+		// 	panic(err)
+		// }
+
+		// skadiRepository.FindById("10")
+	})
 }
 
 func calcularTempo(f func()) {

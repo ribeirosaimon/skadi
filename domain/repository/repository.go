@@ -80,5 +80,5 @@ func (s *skadiRepository) connectSqlDatabase(p properties.Properties) {
 	if err != nil {
 		panic(err)
 	}
-
+	// s.migrateValues(pgsqlDb.conn)
 }

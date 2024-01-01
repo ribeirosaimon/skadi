@@ -24,7 +24,10 @@ type skadiRepositoryInterface interface {
 
 // sqlTemplateInterface is a sql database interface
 type sqlTemplateInterface interface {
-	// Save(Entity) (Entity, error)
+	Save(Entity) error
+	FindById(Entity, uint64) error
+	FindAll() []Entity
+	Transactional(func() error) error
 }
 
 // noSqlTemplateInterface is a no-sql database interface

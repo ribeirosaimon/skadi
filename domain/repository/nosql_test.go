@@ -14,7 +14,7 @@ func TestMongoDatabase_Utils(t *testing.T) {
 	assert.Equal(t, "simpleDataStruct", name)
 }
 
-func TestMongoDatabase_Save(t *testing.T) {
+func TestMongoDatabase_CRUD(t *testing.T) {
 	properties := config.GetProperties("test")
 	repositoryTest := NewSkadiRepository(properties)
 
