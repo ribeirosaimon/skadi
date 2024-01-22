@@ -17,6 +17,7 @@ func (h *HealthService) OpenHealth() HealthDto {
 }
 
 func (h *HealthService) CloseHealth() HealthDto {
+	// sot
 	return HealthDto{Environment: skadiEngine.GetEnvironment(), Time: time.Now()}
 }
 
