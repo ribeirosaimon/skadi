@@ -1,4 +1,4 @@
-package nosqldomain
+package noSql
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"

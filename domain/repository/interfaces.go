@@ -16,8 +16,8 @@ type Document interface {
 	SetId(id primitive.ObjectID)
 }
 
-// skadiRepositoryInterface is an interface between no-sql & sql
-type skadiRepositoryInterface interface {
+// SkadiRepositoryInterface is an interface between no-sql & sql
+type SkadiRepositoryInterface interface {
 	NoSqlTemplate() noSqlTemplateInterface
 	SqlTemplate() sqlTemplateInterface
 }
@@ -26,8 +26,8 @@ type skadiRepositoryInterface interface {
 type sqlTemplateInterface interface {
 	Save(Entity) error
 	FindById(Entity, uint64) error
-	FindAll() []Entity
 	Transactional(func() error) error
+	FindAll(interface{}) error
 }
 
 // noSqlTemplateInterface is a no-sql database interface

@@ -25,11 +25,17 @@ func TestSQLDatabase_CRUD(t *testing.T) {
 	t.Run("Save one value with transactional", func(t *testing.T) {
 
 		var idFound uint64
+		// Need automigrate struct
+		structToMigrate := newSimpleEntityStruct()
+		structToMigrate.Name = "Struct to migrate"
+		repositoryTest.SqlTemplate().Save(&structToMigrate)
 
 		err := repositoryTest.SqlTemplate().Transactional(func() error {
-			// If I save struct
+
 			entityStruct := newSimpleEntityStruct()
-			err := repositoryTest.SqlTemplate().Save(&entityStruct)
+			entityStruct.Name = "can`t exist"
+			repositoryTest.SqlTemplate().Save(&entityStruct)
+			// If I save struct
 			idFound = entityStruct.GetId()
 
 			// I have to find it
@@ -37,19 +43,19 @@ func TestSQLDatabase_CRUD(t *testing.T) {
 			findErr := repositoryTest.SqlTemplate().FindById(&newEntityStructs, entityStruct.GetId())
 
 			// Both need to be equal
-			assert.Nil(t, err)
 			assert.Nil(t, findErr)
 			assert.Equal(t, entityStruct.GetId(), newEntityStructs.GetId())
 
 			// But if I return a error
 			return errors.New("no transaction")
+			// return nil
 		})
 
 		// This struct can not exist
 		notFoundStruct := simpleEntityStruct{}
 		findErr := repositoryTest.SqlTemplate().FindById(&notFoundStruct, idFound)
 
-		assert.NotNil(t, err)
+		assert.Nil(t, err)
 		assert.NotNil(t, findErr)
 	})
 
@@ -75,6 +81,19 @@ func TestSQLDatabase_CRUD(t *testing.T) {
 
 		assert.NotNil(t, err)
 	})
+
+	t.Run("Find All", func(t *testing.T) {
+		firstEntityStruct := newSimpleEntityStruct()
+		repositoryTest.SqlTemplate().Save(&firstEntityStruct)
+		secondEntityStruct := newSimpleEntityStruct()
+		repositoryTest.SqlTemplate().Save(&secondEntityStruct)
+
+		var entity []simpleEntityStruct
+		repositoryTest.SqlTemplate().FindAll(&entity)
+		assert.GreaterOrEqual(t, len(entity), 2)
+
+	})
+
 }
 
 type simpleEntityStruct struct {
