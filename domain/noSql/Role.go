@@ -1,1 +1,1 @@
-package nosqldomain
+package noSql

@@ -1,4 +1,4 @@
-package sqldomain
+package sql
 
 type Stock struct {
 	Id   uint64 `json:"id" gorm:"primaryKey"`

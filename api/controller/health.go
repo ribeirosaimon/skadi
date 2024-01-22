@@ -26,7 +26,7 @@ func Open(c *gin.Context) {
 }
 
 func Close(c *gin.Context) {
-	entity.ThrowError(c, 402, "TESTE DE ERRO")
+	entity.ThrowError(c, 402, "DEU ERRO")
 }
 
 func init() {

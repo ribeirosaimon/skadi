@@ -14,21 +14,13 @@ import (
 	"gorm.io/gorm"
 )
 
-type skadiRepository struct {
+type SkadiRepository struct {
 	sqlConn   sqlTemplateInterface
 	noSqlConn noSqlTemplateInterface
 }
 
-func (s *skadiRepository) NoSqlTemplate() noSqlTemplateInterface {
-	return mongodb
-}
-
-func (s *skadiRepository) SqlTemplate() sqlTemplateInterface {
-	return pgsqlDb
-}
-
-func NewSkadiRepository(p properties.Properties) skadiRepositoryInterface {
-	repository := &skadiRepository{}
+func NewSkadiRepository(p *properties.Properties) SkadiRepositoryInterface {
+	repository := &SkadiRepository{}
 
 	repository.connectNoSqlDatabase(p)
 	repository.connectSqlDatabase(p)
@@ -36,7 +28,15 @@ func NewSkadiRepository(p properties.Properties) skadiRepositoryInterface {
 	return repository
 }
 
-func (s *skadiRepository) connectNoSqlDatabase(p properties.Properties) {
+func (s *SkadiRepository) NoSqlTemplate() noSqlTemplateInterface {
+	return mongodb
+}
+
+func (s *SkadiRepository) SqlTemplate() sqlTemplateInterface {
+	return pgsqlDb
+}
+
+func (s *SkadiRepository) connectNoSqlDatabase(p *properties.Properties) {
 
 	mongoUrl := p.GetString("database.mongo.url", "")
 	dbName := p.GetString("database.mongo.name", "")
@@ -51,7 +51,7 @@ func (s *skadiRepository) connectNoSqlDatabase(p properties.Properties) {
 	mongodb.conn = connection.Database(mongodb.databaseName)
 }
 
-func (s *skadiRepository) connectSqlDatabase(p properties.Properties) {
+func (s *SkadiRepository) connectSqlDatabase(p *properties.Properties) {
 	dbUsername := p.GetString("database.username", "")
 	dbPassword := p.GetString("database.password", "")
 	dbName := p.GetString("database.name", "")
@@ -70,12 +70,16 @@ func (s *skadiRepository) connectSqlDatabase(p properties.Properties) {
 		} else {
 			file = p.GetString("database.in-memory.host", "")
 		}
-		pgsqlDb.conn, err = gorm.Open(sqlite.Open(file), &gorm.Config{})
+		pgsqlDb.conn, err = gorm.Open(sqlite.Open(file), &gorm.Config{
+			SkipDefaultTransaction: true,
+		})
 		if err != nil {
 			panic("erro connection Db")
 		}
 	} else {
-		pgsqlDb.conn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		pgsqlDb.conn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+			SkipDefaultTransaction: true,
+		})
 	}
 	if err != nil {
 		panic(err)

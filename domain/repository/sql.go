@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
 )
 
@@ -13,9 +11,12 @@ type pgsqlDatabase struct {
 
 var pgsqlDb *pgsqlDatabase
 
-func (m pgsqlDatabase) FindAll() []Entity {
-	// TODO implement me
-	panic("implement me")
+func (m pgsqlDatabase) FindAll(entity interface{}) error {
+	if err := m.conn.Find(entity).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (m pgsqlDatabase) FindById(entity Entity, id uint64) error {
@@ -35,20 +36,15 @@ func (m pgsqlDatabase) Save(entity Entity) error {
 }
 
 func (m pgsqlDatabase) Transactional(myFunc func() error) error {
-	if err := m.conn.Transaction(func(tx *gorm.DB) error {
-		tx.Begin()
+	m.conn.Begin()
+	m.conn.SavePoint("begin")
 
-		if err := myFunc(); err != nil {
-			rollback := tx.Rollback()
-			fmt.Sprintf("%s", rollback.Error)
-			return err
-		}
-		return tx.Commit().Error
+	err := myFunc()
 
-	}); err != nil {
-		return err
+	if err != nil {
+		return m.conn.RollbackTo("begin").Error
 	}
-	return nil
+	return m.conn.Commit().Error
 }
 
 // Deprecated
