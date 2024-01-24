@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/ribeirosaimon/skadi/api/controller"
 	"github.com/ribeirosaimon/skadi/api/internal/skadiEngine"
 )
@@ -8,5 +10,5 @@ import (
 func main() {
 	skadiEngine.RegisterRouter(controller.GetRouters())
 
-	skadiEngine.StartSkadiApi()
+	skadiEngine.StartSkadiApi(os.Args[1])
 }

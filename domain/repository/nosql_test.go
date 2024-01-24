@@ -15,7 +15,8 @@ func TestMongoDatabase_Utils(t *testing.T) {
 }
 
 func TestMongoDatabase_CRUD(t *testing.T) {
-	properties := config.GetProperties("test")
+	properties := config.GetPropertiesFile("test")
+
 	repositoryTest := NewSkadiRepository(properties)
 
 	t.Run("Save one value", func(t *testing.T) {

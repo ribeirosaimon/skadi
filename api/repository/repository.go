@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"os"
+
 	"github.com/ribeirosaimon/skadi/api/internal/skadiEngine"
 	"github.com/ribeirosaimon/skadi/domain/repository"
 )
@@ -12,5 +14,6 @@ func GetRepository() repository.SkadiRepositoryInterface {
 }
 
 func init() {
-	repo = repository.NewSkadiRepository(skadiEngine.GetProperties())
+	env := os.Args[1]
+	repo = repository.NewSkadiRepository(skadiEngine.GetProperties(env))
 }
