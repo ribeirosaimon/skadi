@@ -14,7 +14,6 @@ import (
 const testPath = "/test"
 
 func NewTestController() *config.SkadiRouter {
-
 	testDto := struct {
 		Content string
 	}{Content: "test"}

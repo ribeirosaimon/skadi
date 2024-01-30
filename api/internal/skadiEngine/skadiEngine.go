@@ -26,6 +26,9 @@ func RegisterRouter(routers []*config.SkadiRouter) {
 	for _, router := range routers {
 		group := skadi.Group(router.Path)
 		for index, c := range router.Controllers {
+			if c.Roles != nil {
+				group.Use(AuthMiddleware())
+			}
 			log.Printf("Add %d to\n", index)
 
 			handlerFunc := gin.HandlerFunc(c.GinFunction)

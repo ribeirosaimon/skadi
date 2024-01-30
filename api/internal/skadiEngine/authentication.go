@@ -1,4 +1,4 @@
-package middleware
+package skadiEngine
 
 import (
 	"github.com/gin-gonic/gin"
