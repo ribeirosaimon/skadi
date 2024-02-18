@@ -28,6 +28,7 @@ type sqlTemplateInterface interface {
 	FindById(Entity, uint64) error
 	Transactional(func() error) error
 	FindAll(interface{}) error
+	CreateNativeQuery(string, interface{}) error
 }
 
 // noSqlTemplateInterface is a no-sql database interface

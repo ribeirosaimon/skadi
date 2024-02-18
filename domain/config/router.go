@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ribeirosaimon/skadi/domain/noSql"
+	"github.com/ribeirosaimon/skadi/domain/sql"
 )
 
 type SkadiRouter struct {
@@ -14,10 +14,10 @@ type skadiController struct {
 	Method      string
 	Path        string
 	GinFunction func(ctx *gin.Context)
-	Roles       []noSql.Role
+	Roles       []sql.Role
 }
 
-func NewSkadiController(method, path string, handlerFunc gin.HandlerFunc, roles ...noSql.Role) *skadiController {
+func NewSkadiController(method, path string, handlerFunc gin.HandlerFunc, roles ...sql.Role) *skadiController {
 	return &skadiController{Method: method, Path: path, GinFunction: handlerFunc, Roles: roles}
 }
 
