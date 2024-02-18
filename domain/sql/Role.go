@@ -1,4 +1,4 @@
-package noSql
+package sql
 
 type Role string
 

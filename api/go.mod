@@ -4,6 +4,8 @@ go 1.21.3
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/graphql-go/graphql v0.8.1
+	github.com/graphql-go/handler v0.2.3
 	github.com/ribeirosaimon/skadi/domain v0.0.0-20240130013800-2fb772278275
 	github.com/stretchr/testify v1.8.4
 )
